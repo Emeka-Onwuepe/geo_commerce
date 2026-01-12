@@ -17,7 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'money_exchange_backend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'geo_commerce.settings')
 
 from django.core.wsgi import get_wsgi_application
 
