@@ -2,13 +2,16 @@ import pandas as pd
 import numpy as np
 import pickle
 
+base_file = 'static/model'
+model_file = f'{base_file}/cluster_model.pkl'
+cluster_file = f'{base_file}/cluster_details.csv'
 
-filename = 'frontend/cluster_model.pkl'
+
 
 
 def get_outlets(lat,lon):
-    cluster_model = pickle.load(open(filename, 'rb'))
-    df = pd.read_csv('frontend/cluster_details.csv')
+    cluster_model = pickle.load(open(model_file, 'rb'))
+    df = pd.read_csv(cluster_file)
         
     lat = float(lat)
     lon = float(lon)
