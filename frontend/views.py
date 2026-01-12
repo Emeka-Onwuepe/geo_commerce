@@ -1,7 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
-from load_location import get_outlets
+from frontend.load_location import get_outlets
+
 
 
 # Create your views here.
