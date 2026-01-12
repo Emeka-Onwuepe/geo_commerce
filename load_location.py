@@ -5,10 +5,10 @@ import pickle
 
 filename = 'cluster_model.pkl'
 
-cluster_model = pickle.load(open(filename, 'rb'))
-df = pd.read_csv('cluster_details.csv')
 
 def get_outlets(lat,lon):
+    cluster_model = pickle.load(open(filename, 'rb'))
+    df = pd.read_csv('cluster_details.csv')
         
     lat = float(lat)
     lon = float(lon)
