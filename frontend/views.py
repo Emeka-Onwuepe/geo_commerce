@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from frontend.load_location import get_outlets
+from load_location import get_outlets
 
 
 
