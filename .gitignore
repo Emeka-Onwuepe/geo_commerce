@@ -2,3 +2,5 @@ __pycache__/
 */migrations/[0-9]*
 db*
 media/
+
+/home/lotzfmyu/app.lotzcrocoz.com/repo 
