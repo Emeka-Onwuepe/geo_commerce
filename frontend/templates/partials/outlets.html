@@ -1,0 +1,21 @@
+<div class="location-result">
+    
+    {% if not error %}
+        <p><strong>Latitude:</strong> {{ lat }}</p>
+        <p><strong>Longitude:</strong> {{ lon }}</p>
+
+        <ol>
+            {% for reg in regs %}
+            
+            <li>{{reg}} </li>
+            
+            {% endfor %}
+        </ol>
+    {% else %}
+    <p>An error occured </p>
+    {% endif %}
+        
+
+   
+        
+</div>

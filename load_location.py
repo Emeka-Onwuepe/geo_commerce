@@ -1,0 +1,23 @@
+import pandas as pd
+import numpy as np
+import pickle
+
+
+filename = 'cluster_model.pkl'
+
+cluster_model = pickle.load(open(filename, 'rb'))
+df = pd.read_csv('cluster_details.csv')
+
+def get_outlets(lat,lon):
+        
+    lat = float(lat)
+    lon = float(lon)
+    geo_data = np.deg2rad([lat, lon]).reshape(-1, 2)
+    pre_df = pd.DataFrame(data=geo_data,
+                          columns= ['latitude_rad', 'longitude_rad']
+            )
+
+    [cluster_label] = cluster_model.predict(pre_df)
+    reg = df[df['cluster_label']==cluster_label]['registration_area'].unique()
+    return reg
+    
