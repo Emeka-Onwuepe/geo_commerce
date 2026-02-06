@@ -1,0 +1,83 @@
+{% extends 'sales/sales.html' %} {% block title %} {% load static %}
+<title>Product</title>{% endblock title %} {% block main %}
+
+<section id='list_items' class="list_items">
+    {% for category in categories %}
+    <div class="categories">
+        <h3>{{category}}</h3>
+        <div class="content">
+            {% for productType in category.category.all %}
+            <p class="innerItem"><a href="{% url 'sales:salesProductView' productType.id productType.p_group 'default' %}"> {{productType.name}} </a>
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+{% if productType %}
+  <h3>{{productTypeName.name}} {{productTypeName.category.name}}</h3>
+<section id='list_items' class="list_items">
+    {% for brand in brands %}
+    <div class="categories">
+        <div class="content">
+                 <p class="innerItem"><a href="{% url 'sales:salesProductView' productType pgroup brand.brand %}"> {{brand.brand}} </a>
+            
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+<div class="product_container">
+    {% if products %} {% for product,sizes in products %}
+    
+    {% if sizes %}
+        {% include 'sales/product_template.html' %}
+    {% endif %}
+        
+    {% endfor %}
+     {% elif initial %}
+    {% comment %} <p>Please select a product type</p> {% endcomment %}
+    {% else %}
+    <p>No product Found</p>
+    {% endif %}
+</div>
+
+{% comment %} <div style="margin: 30px 0px;" class="get_user">
+    <label for="user_phone_number">Phone_Number</label>
+    <input type="text" name="user_phone_number" id="user_phone_number">
+    <button class="addbutton" id="get_user">Get User</button>
+</div> {% endcomment %}
+
+{% comment %} <div id="flex_container">
+    <form action="{% url 'sales:salesView' %}" method="post">
+        {% csrf_token %}
+        {% include 'sales/getproductform.html' %}
+        <button class="addbutton" type="submit">Get Product</button>
+    </form>
+
+    <div class="get_user">
+        <label for="user_phone_number">Phone_Number</label>
+        <input type="text" name="user_phone_number" id="user_phone_number">
+        <button class="addbutton" id="get_user">Get User</button>
+    </div>
+</div> {% endcomment %}
+
+{% include "sales/salesform.html" %} {% endblock main %} {% block javascript %}
+<script src="{% static 'javascript/state.js' %}"></script>
+<script src="{% static 'javascript/productpage.js' %}"></script>
+<script>
+    const data_ = document.getElementById('json_data').textContent
+    const data = JSON.parse(data_)
+    const pgroup = "{{pgroup}}"
+    
+    storestate = storeReducer(addProduct({products:data.products,pgroup}))
+   // data.products.forEach(product =>{
+      //  let target = document.getElementById(`meta-${product.id}`)
+      //  target.innerHTML = product.meta
+   // })
+
+    setState(storestate)
+</script>
+{% endblock javascript %}

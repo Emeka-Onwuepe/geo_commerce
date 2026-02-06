@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
+from rest_framework.settings import api_settings
+# from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,11 +44,47 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_htmx",
-    'frontend.apps.FrontendConfig',
+    # 'frontend.apps.FrontendConfig',
+    'rest_framework',
+    "knox",
+    "corsheaders",
+    "api.apps.ApiConfig",
+    "Branch.apps.BranchConfig",
+    "Credit_Sales.apps.CreditSalesConfig",
+    "Frontview.apps.FrontviewConfig",
+    "Product.apps.ProductConfig",
+    "Returned_Product.apps.ReturnedProductConfig",
+    "Bad_Product.apps.BadProductConfig",
+    "Sales.apps.SalesConfig",
+    "Logistics.apps.LogisticsConfig",
+    "errortemplate.apps.ErrortemplateConfig",
+    "Stock.apps.StockConfig",
+    "User.apps.UserConfig",
 
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        "knox.auth.TokenAuthentication",
+    ],
+    "DATETIME_FORMAT":"%d/%b/%Y %H:%M",
+    
+}
+
+REST_KNOX = {
+  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+  'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+  'TOKEN_TTL': timedelta(hours=12),
+  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+  'TOKEN_LIMIT_PER_USER': None,
+  'AUTO_REFRESH': False,
+  'EXPIRY_DATETIME_FORMAT': api_settings.DATETIME_FORMAT,
+}
+
+CORS_ALLOWED_ORIGINS = []
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
@@ -69,6 +108,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "geo_commerce.context_processor.context_processor",
+
             ],
         },
     },
@@ -82,10 +123,31 @@ WSGI_APPLICATION = 'geo_commerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'geo_commerce',
+        'USER': 'root',
+        'HOST': 'localhost',
+        'PASSWORD': '',
+        'PORT': '',
+        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                    }
     }
+    
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.environ.get("db_name"),
+#         'USER':  os.environ.get("db_user"),
+#         'HOST': 'localhost',
+#         'PASSWORD':  os.environ.get("db_password"),
+#         'PORT': '',
+#         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#                     }
+#     }
+# }
 
 
 # Password validation
@@ -110,19 +172,25 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-uk'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Lagos'  # UTC+1, or use 'UTC' if you prefer UTC time
 
 USE_I18N = True
 
 USE_TZ = True
 
 
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

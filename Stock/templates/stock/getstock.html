@@ -1,0 +1,97 @@
+{% extends 'sales/sales.html' %} {% load static %} {% block title %}
+<title>Check Stocks</title>{% endblock title %} {% block main %}
+<h1>Check Stocks</h1>
+
+<form action="{% url 'stock:getStockView' %}" method="post">
+    {% csrf_token %} 
+    <div class="class_data">
+    {% include 'stock/getstockform.html' %}
+    </div>
+    <button type="submit">Get Stock</button>
+</form>
+
+{% if stocks %}
+<h5>Results from {{stocks.0.cluster_instance.cluster}} cluster</h5>
+{% elif all%}
+<h5>Results From all the clusteres</h5>
+{% elif searched%}
+<h5>No results from {{stocks.0.cluster_instance.cluster}} cluster</h5>
+{% endif %}
+    
+<div style="margin-top: 30px;" id="salesList" class="tablecontainer">
+    <table id="stock-table">
+        <thead>
+            <th>SN</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Brand</th>
+            <th>Color</th>
+            <th>Product meta</th>
+            <th>Size</th>
+            <th>Current Qty</th>
+            <th>Returned Qty</th>
+            <th>Bad Qty</th>
+            {% comment %} <th>Add Stock</th> {% endcomment %}
+        </thead>
+        <tbody>
+
+            {% for stock in stocks %} 
+            <tr>
+                <td class="sn"></td>
+                <td>{{stock.cluster_instance.product.product_type.category}}</td>
+                <td>{{stock.cluster_instance.product.product_type.name}}</td>
+                <td>{{stock.cluster_instance.product.brand}}</td>
+                <td>{{stock.cluster_instance.product.color}}</td>
+                <td style="font-size: 14px;">{{stock.cluster_instance.product.get_details}}</td>
+                <td>{{stock.size.size}}</td>
+                <td>{{stock.current_qty}}</td>
+                <td>{{stock.returned_qty}}</td>
+                <td>{{stock.bad_qty}}</td>
+                {% comment %} <td>
+                    <form action="{% url 'stock:stockView' stockId clusterId action pgroup %}" method="post">
+                        {% csrf_token %}
+                        <label for="id_qty">Qty:</label>
+                        <input type="number" name="qty" required="" id="id_qty">
+                        <input type="hidden" name="product" value="{{cluster_product.cluster_instance.product.id}}">
+                        <input type="hidden" name="size_instance" value="{{cluster_product.size.id}}">
+                        <input type="hidden" name="cluster" value="{{clusterId}}">
+                        <button type="submit"> Add</button>
+                    </form>
+
+                </td> {% endcomment %}
+            </tr>
+             {% endfor %}
+             {% for stock in all_ %} 
+             <tr>
+                 <td class="sn"></td>
+                 <td>{{stock.0.cluster_instance.product.product_type.category}}</td>
+                 <td>{{stock.0.cluster_instance.product.product_type.name}}</td>
+                 <td>{{stock.0.cluster_instance.product.brand}}</td>
+                 <td>{{stock.0.cluster_instance.product.color}}</td>
+                 <td style="font-size: 14px;">{{stock.0.cluster_instance.product.get_details}}</td>
+                 <td>{{stock.0.size.size}}</td>
+                 <td>{{stock.1}}</td>
+                 <td>{{stock.2}}</td>
+                 <td>{{stock.3}}</td>
+                 {% comment %} <td>
+                     <form action="{% url 'stock:stockView' stockId clusterId action pgroup %}" method="post">
+                         {% csrf_token %}
+                         <label for="id_qty">Qty:</label>
+                         <input type="number" name="qty" required="" id="id_qty">
+                         <input type="hidden" name="product" value="{{cluster_product.cluster_instance.product.id}}">
+                         <input type="hidden" name="size_instance" value="{{cluster_product.size.id}}">
+                         <input type="hidden" name="cluster" value="{{clusterId}}">
+                         <button type="submit"> Add</button>
+                     </form>
+ 
+                 </td> {% endcomment %}
+             </tr>
+              {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+</div>
+
+{% endblock main %} {% block javascript %}
+
+{% endblock javascript %}

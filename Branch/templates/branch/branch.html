@@ -1,0 +1,39 @@
+{% extends 'sales/sales.html' %} {% block title %}
+<title>clusteres</title>{% endblock title %} {% block main %}
+<h1>clusteres</h1>
+<form action="{% url 'cluster:clusterView' clusterID action %}" method="post">
+    {% csrf_token %} {{form}}
+    <button type="submit" class="submit addbutton">
+        
+        {% if action == "add" %}
+            ADD
+        {% else %}
+            UPDATE
+        {% endif %}
+            
+    </button>
+</form>
+
+<section class="list_items">
+  
+    {% for cluster in clusteres %}
+    <div class="items">
+        <div class="innerItem">
+            <p style="margin-right:20px;">{{cluster.name}}</p>
+            {% comment %} <a class="delete" href="{% url 'cluster:clusterView' cluster.id 'delete' %}">
+                <button>
+                    Delete
+                    </button>
+            </a> {% endcomment %}
+            <a href="{% url 'cluster:clusterView' cluster.id 'edit' %}">
+                <button >
+                    Edit
+                    </button>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+
+{% endblock main %}

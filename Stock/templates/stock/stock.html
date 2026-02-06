@@ -1,0 +1,107 @@
+{% extends 'sales/sales.html' %} {% load static %} {% block title %}
+<title>Add Stock</title>{% endblock title %} {% block main %}
+<h1>Add Stock to {{cluster}}</h1>
+<h3>{{pgroup|upper}}</h3>
+<section style="text-align: center;" class="list_items">
+    {% for pgroup in product_groups  %}
+    <div class="items">
+
+        <a href="{% url 'stock:stockView' stockId clusterId action pgroup  %}">{{pgroup}}</a>
+    </div>
+
+    {% endfor %}
+</section>
+
+<form style="margin-bottom: 20px;"
+action="{% url 'stock:stockView' stockId clusterId action pgroup %}" method="post">
+    {% csrf_token %} 
+    <div class="class_data">
+        {{form}}
+    </div>
+   
+
+    <button  class='addbutton' type="submit">
+            
+            {% if action == "add" %}
+                ADD
+            {% else %}
+                UPDATE
+            {% endif %}
+                
+        </button>
+</form> 
+
+<form action="{% url 'stock:stockView' stockId clusterId 'get' pgroup %}" method="post">
+    {% csrf_token %} 
+    <div class="class_data">
+        {% include 'stock/getstockform_.html' %}
+    </div>
+    <button class='addbutton'  type="submit">Get Stock</button>
+</form>
+
+
+
+<div class="list_items">
+    {% for stock in stocks %}
+    
+    <div class="items center">
+
+        <p> {{stock.product}} </p>
+        <p> {{stock.size_instance}} </p>
+        <div>
+            <p class="description">{{stock.date}} --- ({{stock.qty}}) </p>
+            {% comment %} <a class="delete" href="{% url 'stock:stockView' stock.id clusterId 'delete' pgroup %}"><button>Delete</button></a> {% endcomment %}
+            <a href="{% url 'stock:stockView' stock.id clusterId 'edit' pgroup %}"><button>Edit</button></a>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+<div style="margin-top: 30px;" id="salesList" class="tablecontainer">
+    <table id="stock-table">
+        <thead>
+            <th>SN</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Color</th>
+            <th>Size</th>
+            <th>Current Qty</th>
+            <th>Returned Qty</th>
+            <th>Bad Qty</th>
+            <th>Add Stock</th>
+        </thead>
+        <tbody>
+
+            {% for cluster_product in cluster_stock %} 
+            <tr>
+                <td class="sn"></td>
+                <td>{{cluster_product.cluster_instance.product.product_type.category}}</td>
+                <td>{{cluster_product.cluster_instance.product.product_type.name}}</td>
+                <td>{{cluster_product.cluster_instance.product.color}}</td>
+                <td>{{cluster_product.size.size}}</td>
+                <td>{{cluster_product.current_qty}}</td>
+                <td>{{cluster_product.returned_qty}}</td>
+                <td>{{cluster_product.bad_qty}}</td>
+                <td>
+                    <form action="{% url 'stock:stockView' stockId clusterId action pgroup %}" method="post">
+                        {% csrf_token %}
+                        <label for="id_qty">Qty:</label>
+                        <input type="number" name="qty" required="" id="id_qty">
+                        <input type="hidden" name="product" value="{{cluster_product.cluster_instance.product.id}}">
+                        <input type="hidden" name="size_instance" value="{{cluster_product.size.id}}">
+                        <input type="hidden" name="cluster" value="{{clusterId}}">
+                        <button type="submit"> Add</button>
+                    </form>
+
+                </td>
+            </tr>
+             {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+</div>
+
+{% endblock main %} {% block javascript %}
+<script src="{% static 'javascript/stock.js' %}"></script>
+{% endblock javascript %}

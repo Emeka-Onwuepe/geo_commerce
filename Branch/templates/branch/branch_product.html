@@ -1,0 +1,26 @@
+{% extends 'sales/sales.html' %} {% block title %}
+<title>cluster Product</title>{% endblock title %} {% block main %}
+<h1>cluster Product</h1>
+<ul>
+
+    {% for clusterProduct in clusterProducts %}
+    <li>{{clusterProduct}}</li>
+
+    <a href="{% url 'cluster:clusterProductView' clusterProduct.id 'delete' %}"> DELETE</a>
+    <a href="{% url 'cluster:clusterProductView' clusterProduct.id 'edit' %}"> Edict</a> {% endfor %}
+
+</ul>
+<form action="{% url 'cluster:clusterProductView' clusterProductId action %}" method="post">
+    {% csrf_token %} {{form}}
+    <button class="addbutton" type="submit">
+        
+        {% if action == "add" %}
+            ADD
+        {% else %}
+            UPDATE
+        {% endif %}
+            
+    </button>
+</form>
+
+{% endblock main %}
